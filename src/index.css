@@ -1,0 +1,23 @@
+/* index.css */
+
+.notification {
+  background-color: black;
+  color: green;
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.error {
+  background-color: black;
+  color: red;
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
