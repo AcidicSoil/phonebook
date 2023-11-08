@@ -1,18 +1,18 @@
 import axios from "axios";
 
-const baseUrl = "/api/persons";
+const baseUrl = "/api/entries";
 
 const getAll = () => {
   return axios.get(baseUrl).then((response) => response.data);
 };
 
-const create = (newPerson) => {
-  return axios.post(baseUrl, newPerson).then((response) => response.data);
+const create = (newEntry) => {
+  return axios.post(baseUrl, newEntry).then((response) => response.data);
 };
 
-const update = (id, updatedPerson) => {
+const update = (id, updatedEntry) => {
   return axios
-    .put(`${baseUrl}/${id}`, updatedPerson)
+    .put(`${baseUrl}/${id}`, updatedEntry)
     .then((response) => response.data);
 };
 
