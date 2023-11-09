@@ -1,42 +1,42 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import entriesService from "./services/entries";
+import personsService from "./services/persons";
 
 const App = () => {
-  const [entries, setEntries] = useState([]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [notification, setNotification] = useState(null);
   const [errorNotification, setErrorNotification] = useState(null);
 
   useEffect(() => {
-    entriesService
+    personsService
       .getAll()
-      .then((initialEntries) => {
-        setEntries(initialEntries);
+      .then((initialPersons) => {
+        setPersons(initialPersons);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
 
-  const addEntry = () => {
-    const existingEntry = entries.find((entry) => entry.name === newName);
+  const addPerson = () => {
+    const existingPerson = persons.find((person) => person.name === newName);
 
-    if (existingEntry) {
+    if (existingPerson) {
       const confirmed = window.confirm(
         `${newName} is already in the phonebook. Do you want to update their number?`
       );
 
       if (confirmed) {
-        const updatedEntry = { ...existingEntry, number: newNumber };
+        const updatedPerson = { ...existingPerson, number: newNumber };
 
-        entriesService
-          .update(existingEntry.id, updatedEntry)
+        personsService
+          .update(existingPerson.id, updatedPerson)
           .then((response) => {
-            setEntries(
-              entries.map((entry) =>
-                entry.id === response.id ? response : entry
+            setPersons(
+              persons.map((person) =>
+                person.id === response.id ? response : person
               )
             );
             setNewName("");
@@ -44,40 +44,40 @@ const App = () => {
             showNotification(`Updated ${response.name}'s number`);
           })
           .catch((error) => {
-            console.error("Error updating entry:", error);
+            console.error("Error updating person:", error);
             showErrorNotification(
-              `Failed to update ${existingEntry.name}'s number`
+              `Failed to update ${existingPerson.name}'s number`
             );
           });
       }
     } else {
-      const newEntry = { name: newName, number: newNumber };
+      const newPerson = { name: newName, number: newNumber };
 
-      entriesService
-        .create(newEntry)
-        .then((addedEntry) => {
-          setEntries([...entries, addedEntry]);
+      personsService
+        .create(newPerson)
+        .then((addedPerson) => {
+          setPersons([...persons, addedPerson]);
           setNewName("");
           setNewNumber("");
-          showNotification(`Added ${addedEntry.name}`);
+          showNotification(`Added ${addedPerson.name}`);
         })
         .catch((error) => {
-          console.error("Error adding a new entry:", error);
-          showErrorNotification("Failed to add a new entry");
+          console.error("Error adding a new person:", error);
+          showErrorNotification("Failed to add a new person");
         });
     }
   };
 
-  const deleteEntry = (id, name) => {
+  const deletePerson = (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
-      entriesService
+      personsService
         .remove(id)
         .then(() => {
-          setEntries(entries.filter((entry) => entry.id !== id));
+          setPersons(persons.filter((person) => person.id !== id));
           showNotification(`Deleted ${name}`);
         })
         .catch((error) => {
-          console.error("Error deleting entry:", error);
+          console.error("Error deleting person:", error);
           showErrorNotification(`Failed to delete ${name}`);
         });
     }
@@ -115,17 +115,17 @@ const App = () => {
           />
         </div>
         <div>
-          <button type="button" onClick={addEntry}>
+          <button type="button" onClick={addPerson}>
             add
           </button>
         </div>
       </form>
       <h2>Numbers</h2>
       <ul>
-        {entries.map((entry) => (
-          <li key={entry.id}>
-            {entry.name}: {entry.number}
-            <button onClick={() => deleteEntry(entry.id, entry.name)}>
+        {persons.map((person) => (
+          <li key={person.id}>
+            {person.name}: {person.number}
+            <button onClick={() => deletePerson(person.id, person.name)}>
               Delete
             </button>
           </li>
